@@ -1,0 +1,21 @@
+# --- Phase 1: PII Detection Engine & NLP ---
+presidio-analyzer>=2.2.0
+presidio-anonymizer>=2.2.0
+spacy>=3.7.0
+
+# --- Phase 2: Django & REST API ---
+Django>=5.0.0
+djangorestframework>=3.14.0
+django-cors-headers>=4.3.0
+psycopg2-binary>=2.9.9
+python-decouple==3.8
+
+# --- Phase 3: Web Dashboard ---
+python-dotenv>=1.0.0
+
+# --- Phase 4: Document Parsing & Async Jobs ---
+pdfplumber>=0.10.3
+python-docx>=1.1.0
+celery>=5.3.6
+redis>=5.0.1
+reportlab>=4.0.0

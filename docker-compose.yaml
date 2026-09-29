@@ -1,0 +1,55 @@
+services:
+  db:
+    image: postgres:15
+    container_name: shadowscrub_db
+    env_file:
+      - .env
+    # environment:
+    #   # - POSTGRES_DB=shadowscrub_db
+    #   # - POSTGRES_USER=shadowuser
+    #   # - POSTGRES_PASSWORD=shadowpassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+  redis:
+    image: redis:7
+    container_name: shadowscrub_redis
+    ports:
+      - "6379:6379"
+    depends_on:
+      - db
+  web:
+    build: .
+    container_name: shadowscrub_web
+    command: ['./wait-for-it.sh', 'db:5432', '--', 'python', 'manage.py', 'runserver', '0.0.0.0:8000']
+    volumes: 
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      #the reason we still need these her because it is docker specifc requirements(the hostname "db" only exist within docker network, so we need it)
+    depends_on:
+      - db
+      - redis
+    
+  celery_worker:
+    build: .
+    container_name: shadowscrub_celery
+    command: celery -A ShadowScrub worker --loglevel=info
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    environment:
+      - DB_HOST=db
+    depends_on:
+      - db
+      - redis
+      - web
+      
+
