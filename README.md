@@ -31,7 +31,7 @@ Built with **Django**, **Microsoft Presidio**, **spaCy**, **Celery**, **Redis**,
 | `/api/v1/export/` | POST | Export scrubbed text as PDF/DOCX |
 
 ### Web dashboard
-- **Metrics** — request counts, redaction totals, recent logs
+- **Dashboard** — request counts, redaction totals, recent logs
 - **Playground** — live text testing
 - **Documents** — file upload + async results
 - **API Keys** — generate and manage keys
@@ -84,9 +84,59 @@ docker compose up --build
 docker compose up -d --build
 
 # 4) Run migrations
+```
+## Then open:
+
+```bash
+# Dashboard
+http://127.0.0.1:8000/dashboard/
+
+# Playground
+http://127.0.0.1:8000/dashboard/playground/
+
+# Documents
+http://127.0.0.1:8000/dashboard/documents/
+
+# API Keys
+http://127.0.0.1:8000/dashboard/keys/
+
+# Admin
+http://127.0.0.1:8000/admin/
 docker compose exec web python manage.py makemigrations
 docker compose exec web python manage.py migrate
 
 # 5) Create superuser
 docker compose exec web python manage.py createsuperuser
+```
+## Useful docker commands
+
+```bash
+# Start (foreground)
+docker compose up --build
+
+# Start (background)
+docker compose up -d --build
+
+# Stop
+docker compose down
+
+# Stop and delete DB volume data
+docker compose down -v
+
+# Restart services
+docker compose restart web
+docker compose restart celery_worker
+
+# Migrations / superuser
+docker compose exec web python manage.py makemigrations
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py createsuperuser
+
+# Logs
+docker compose logs -f
+docker compose logs -f web
+docker compose logs -f celery_worker
+
+# Container status
+docker compose ps
 ```
